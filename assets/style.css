@@ -1,0 +1,164 @@
+/* ============================================
+   Pipeline Crédito — Dashboard Python Theme
+   Dark premium com acentos dourados
+   ============================================ */
+
+/* === CORE THEME === */
+[data-testid="stAppViewContainer"] {
+  background: linear-gradient(135deg, #0a1628 0%, #0d1f2d 50%, #0a1628 100%);
+}
+
+[data-testid="stSidebar"] {
+  background: linear-gradient(180deg, #0d1f2d 0%, #0a1628 100%);
+  border-right: 1px solid rgba(201, 165, 92, 0.15);
+}
+
+[data-testid="stHeader"] {
+  background: transparent;
+}
+
+/* === SIDEBAR STYLING === */
+[data-testid="stSidebar"] [data-testid="stMarkdown"] h1 {
+  color: #c9a55c !important;
+  font-size: 1.4rem !important;
+  letter-spacing: 0.05em;
+}
+
+[data-testid="stSidebar"] label {
+  color: rgba(201, 165, 92, 0.7) !important;
+  font-size: 0.7rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+[data-testid="stSidebar"] .stSelectbox > div > div {
+  background: rgba(201, 165, 92, 0.08) !important;
+  border: 1px solid rgba(201, 165, 92, 0.2) !important;
+  color: #c9a55c !important;
+  border-radius: 8px;
+}
+
+[data-testid="stSidebar"] .stSlider > div > div > div {
+  color: #c9a55c !important;
+}
+
+/* Slider track and thumb */
+[data-testid="stSidebar"] .stSlider [data-testid="stThumbValue"] {
+  color: #c9a55c !important;
+}
+
+/* === METRIC CARDS === */
+[data-testid="stMetric"] {
+  background: rgba(201, 165, 92, 0.05);
+  border: 1px solid rgba(201, 165, 92, 0.15);
+  border-radius: 16px;
+  padding: 1.2rem;
+  backdrop-filter: blur(10px);
+}
+
+[data-testid="stMetric"] label {
+  color: rgba(201, 165, 92, 0.6) !important;
+  font-size: 0.65rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+[data-testid="stMetric"] [data-testid="stMetricValue"] {
+  color: #ffffff !important;
+  font-size: 1.6rem !important;
+  font-weight: 800;
+}
+
+[data-testid="stMetric"] [data-testid="stMetricDelta"] {
+  color: #c9a55c !important;
+}
+
+/* === GLASSMORPHISM CONTAINERS === */
+.glassmorphism {
+  background: rgba(201, 165, 92, 0.03);
+  border: 1px solid rgba(201, 165, 92, 0.12);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+/* === HEADINGS === */
+h1,
+h2,
+h3 {
+  color: #ffffff !important;
+}
+
+h4,
+h5,
+h6 {
+  color: rgba(201, 165, 92, 0.8) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem !important;
+  font-weight: 700;
+}
+
+/* === GENERAL TEXT === */
+p,
+span,
+div {
+  color: #e0e0e0;
+}
+
+/* === DIVIDER === */
+hr {
+  border-color: rgba(201, 165, 92, 0.15) !important;
+}
+
+/* === TABS === */
+.stTabs [data-baseweb="tab-list"] {
+  gap: 8px;
+  background: transparent;
+}
+
+.stTabs [data-baseweb="tab"] {
+  background: rgba(201, 165, 92, 0.08);
+  border: 1px solid rgba(201, 165, 92, 0.2);
+  border-radius: 8px;
+  color: rgba(201, 165, 92, 0.7);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stTabs [aria-selected="true"] {
+  background: rgba(201, 165, 92, 0.2) !important;
+  color: #c9a55c !important;
+  border-color: #c9a55c !important;
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a1628;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 165, 92, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 165, 92, 0.5);
+}
+
+/* === PLOTLY OVERRIDES === */
+.js-plotly-plot .plotly .modebar {
+  background: transparent !important;
+}
+
+/* === EXPANDER === */
+[data-testid="stExpander"] {
+  background: rgba(201, 165, 92, 0.03);
+  border: 1px solid rgba(201, 165, 92, 0.12);
+  border-radius: 12px;
+}
