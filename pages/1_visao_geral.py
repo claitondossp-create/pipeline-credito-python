@@ -3,12 +3,11 @@ Página 1 — Panorama Executivo (Visão Geral)
 """
 import streamlit as st
 import plotly.graph_objects as go
-import plotly.express as px
 import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from utils.database import query_application_data, query_all_application_data
+from utils.database import query_application_data
 from utils.calculations import (
     calculate_volume,
     calculate_ticket_medio,
@@ -28,18 +27,19 @@ if os.path.exists(CSS_PATH):
     with open(CSS_PATH) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Plotly theme defaults
+# Cores e Estilos
+TEAL = "#04BDAC"
+GOLD_TEXT = "#D4AF37"
+BG_COLOR = "#011114"
+
 PLOT_LAYOUT = dict(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(color="#999", size=12),
-    margin=dict(l=20, r=20, t=30, b=20),
-    xaxis=dict(gridcolor="rgba(201,165,92,0.1)", showline=False),
-    yaxis=dict(gridcolor="rgba(201,165,92,0.1)", showline=False),
+    font=dict(color="#888", size=11, family="Inter"),
+    margin=dict(l=0, r=0, t=20, b=20),
+    xaxis=dict(showgrid=False, zeroline=False, showline=True, linecolor="#333"),
+    yaxis=dict(showgrid=False, zeroline=False, showline=False),
 )
-
-GOLD = "#C9A55C"
-GOLD_DARK = "#8B7355"
 
 # Pegar filtros
 filters = st.session_state.get("filters", {
@@ -67,47 +67,45 @@ total = count_contratos(df)
 inadimplencia = calculate_taxa_inadimplencia(df)
 eficiencia = calculate_taxa_eficiencia(df)
 
-# --- HEADER ---
+# --- HEADER (Oculto visualmente pois o layout é focado nos cards) ---
+# st.title("Panorama Executivo") 
+
+# --- CARDS HTML CORRIGIDOS ---
+def card_html(icon, title, value, badge_text, badge_color="rgba(4, 189, 172, 0.2)"):
+    return f"""
+    <div class="custom-card">
+        <div>
+            <div class="card-icon">{icon}</div>
+            <div class="card-title">{title}</div>
+            <div class="card-value">{value}</div>
+        </div>
+        <div class="card-badge">{badge_text}</div>
+    </div>
+    """
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    val_fmt = f"R$ {vol['total_volume']:,.0f}".replace(",", ".")
+    st.markdown(card_html("💵", "VOLUME TOTAL", val_fmt, f"{eficiencia:.1f}%"), unsafe_allow_html=True)
+
+with col2:
+    ticket_fmt = f"R$ {ticket:,.0f}".replace(",", ".")
+    st.markdown(card_html("🏷️", "TICKET MÉDIO", ticket_fmt, "Médio"), unsafe_allow_html=True)
+
+with col3:
+    st.markdown(card_html("📄", "TOTAL DE CONTRATOS", str(total), "Contratos"), unsafe_allow_html=True)
+
+with col4:
+    inad_fmt = f"{inadimplencia:.2f}%"
+    st.markdown(card_html("⚠️", "TAXA INADIMPLÊNCIA", inad_fmt, "Atenção"), unsafe_allow_html=True)
+
+
+# --- GRÁFICO PRINCIPAL ---
 st.markdown("""
-<div style="margin-bottom: 1.5rem;">
-    <h1 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: white; margin: 0;">
-        Panorama Executivo
-    </h1>
-    <p style="color: rgba(201,165,92,0.6); font-size: 0.7rem; text-transform: uppercase; 
-              letter-spacing: 0.15em; font-weight: 600; margin-top: 0.3rem;">
-        Visão Geral de Crédito
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
-# --- MÉTRICAS ---
-def fmt_currency(val):
-    """Formata valor em R$."""
-    if val >= 1_000_000:
-        return f"R$ {val/1_000_000:.1f}M"
-    elif val >= 1_000:
-        return f"R$ {val/1_000:.0f}k"
-    return f"R$ {val:.0f}"
-
-
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("💰 Volume Total", fmt_currency(vol["total_volume"]), f"{eficiencia:.1f}% eficiência")
-c2.metric("🎫 Ticket Médio", fmt_currency(ticket), "Médio")
-c3.metric("📄 Total de Contratos", f"{total:,}".replace(",", "."), "Contratos")
-c4.metric("⚠️ Taxa Inadimplência", f"{inadimplencia:.2f}%", "Saudável" if inadimplencia < 5 else "Atenção")
-
-st.markdown("---")
-
-# --- GRÁFICO: Evolução Temporal ---
-st.markdown("""
-<div style="margin-bottom: 1rem;">
-    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: white; margin: 0;">
-        Qual a evolução do nosso volume estratégico?
-    </h2>
-    <p style="color: rgba(201,165,92,0.5); font-size: 0.65rem; text-transform: uppercase; 
-              letter-spacing: 0.12em; font-weight: 600;">
-        Evolução do Volume ao Longo do Tempo
-    </p>
+<div class="chart-container">
+    <div class="section-title">Qual a evolução do nosso volume estratégico?</div>
+    <div class="section-subtitle">EVOLUÇÃO DO VOLUME AO LONGO DO TEMPO</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -115,90 +113,57 @@ evo = calculate_temporal_evolution(df)
 
 if not evo.empty:
     fig_evo = go.Figure()
+
+    # Linha Suave (Spline)
     fig_evo.add_trace(go.Scatter(
         x=evo["label"], y=evo["volume"],
-        mode="lines+markers", name="Volume (R$)",
-        line=dict(color=GOLD, width=2),
-        marker=dict(color=GOLD, size=6),
+        mode="lines+markers",
+        name="Volume",
+        line=dict(color="#E0C068", width=2, shape='spline', smoothing=1.3),
+        marker=dict(size=6, color="#E0C068", line=dict(width=1, color="#111")),
     ))
-    fig_evo.add_trace(go.Scatter(
-        x=evo["label"], y=evo["quantidade"],
-        mode="lines+markers", name="Quantidade",
-        line=dict(color=GOLD_DARK, width=2),
-        marker=dict(color=GOLD_DARK, size=5),
-        yaxis="y2",
-    ))
+    
     fig_evo.update_layout(
         **PLOT_LAYOUT,
-        height=380,
-        yaxis=dict(title="Volume (R$)", titlefont=dict(color=GOLD), tickfont=dict(color="#999"),
-                   gridcolor="rgba(201,165,92,0.08)"),
-        yaxis2=dict(title="Quantidade", titlefont=dict(color=GOLD_DARK), tickfont=dict(color="#999"),
-                    overlaying="y", side="right", gridcolor="rgba(0,0,0,0)"),
-        legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5,
-                    font=dict(color=GOLD, size=11)),
+        height=400,
         hovermode="x unified",
+        xaxis=dict(
+            tickfont=dict(color="#666"), 
+            showgrid=False
+        ),
+        yaxis=dict(
+            visible=True, 
+            tickfont=dict(color="#666"),
+            tickprefix="R$ "
+        ),
+        showlegend=False
     )
     st.plotly_chart(fig_evo, use_container_width=True)
 else:
     st.info("Sem dados temporais para exibir.")
 
-st.markdown("---")
+# --- OUTROS GRÁFICOS (mantidos simples por enquanto) ---
+st.markdown("<br>", unsafe_allow_html=True)
+c_left, c_right = st.columns(2)
 
-# --- BOTTOM GRID ---
-col_left, col_right = st.columns(2)
-
-# Volume por Tipo de Renda
-with col_left:
-    st.markdown("""
-    <div style="margin-bottom: 1rem;">
-        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color: white; margin: 0;">
-            Como o volume se distribui por renda?
-        </h2>
-        <p style="color: rgba(201,165,92,0.5); font-size: 0.65rem; text-transform: uppercase; 
-                  letter-spacing: 0.12em; font-weight: 600;">
-            Volume por Tipo de Renda
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
+with c_left:
+    st.markdown('<div class="section-title" style="font-size:1.2rem">Volume por Renda</div>', unsafe_allow_html=True)
     renda = group_by_field(df, "tipo_renda")
     if not renda.empty:
-        renda_top = renda.head(6)
-        fig_renda = go.Figure(go.Bar(
-            x=renda_top["value"],
-            y=renda_top["label"],
-            orientation="h",
-            marker=dict(color=GOLD, line=dict(width=0)),
+        fig_r = go.Figure(go.Bar(
+            x=renda.head(5)["value"], y=renda.head(5)["label"], orientation='h',
+            marker=dict(color="#E0C068")
         ))
-        fig_renda.update_layout(**PLOT_LAYOUT, height=320, showlegend=False,
-                                yaxis=dict(autorange="reversed", categoryorder="total ascending"))
-        st.plotly_chart(fig_renda, use_container_width=True)
+        fig_r.update_layout(**PLOT_LAYOUT, height=250, yaxis=dict(autorange="reversed"))
+        st.plotly_chart(fig_r, use_container_width=True)
 
-# Distribuição por Faixa Etária
-with col_right:
-    st.markdown("""
-    <div style="margin-bottom: 1rem;">
-        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color: white; margin: 0;">
-            Quem compõe nossa carteira?
-        </h2>
-        <p style="color: rgba(201,165,92,0.5); font-size: 0.65rem; text-transform: uppercase; 
-                  letter-spacing: 0.12em; font-weight: 600;">
-            Distribuição por Faixa Etária
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    age_dist = calculate_age_distribution(df)
-    if not age_dist.empty:
-        colors = [GOLD, GOLD_DARK, "#D4AF37", "#B8860B", "#DAA520", "#A07830"]
-        fig_pie = go.Figure(go.Pie(
-            labels=age_dist["faixa_etaria"],
-            values=age_dist["quantidade"],
-            hole=0.55,
-            marker=dict(colors=colors[:len(age_dist)]),
-            textinfo="label+percent",
-            textfont=dict(color="white", size=11),
+with c_right:
+    st.markdown('<div class="section-title" style="font-size:1.2rem">Faixa Etária</div>', unsafe_allow_html=True)
+    age = calculate_age_distribution(df)
+    if not age.empty:
+        fig_p = go.Figure(go.Pie(
+            labels=age["faixa_etaria"], values=age["quantidade"], hole=0.7,
+            marker=dict(colors=["#E0C068", "#C9A55C", "#8B7355", "#5C4D38"])
         ))
-        fig_pie.update_layout(**PLOT_LAYOUT, height=350, showlegend=False)
-        st.plotly_chart(fig_pie, use_container_width=True)
+        fig_p.update_layout(**PLOT_LAYOUT, height=250, showlegend=False)
+        st.plotly_chart(fig_p, use_container_width=True)

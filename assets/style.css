@@ -1,164 +1,131 @@
 /* ============================================
    Pipeline Crédito — Dashboard Python Theme
-   Dark premium com acentos dourados
+   Dark premium com acentos dourados e layout clean
    ============================================ */
 
 /* === CORE THEME === */
 [data-testid="stAppViewContainer"] {
-  background: linear-gradient(135deg, #0a1628 0%, #0d1f2d 50%, #0a1628 100%);
+  background-color: #011114; /* Fundo bem escuro, quase preto esverdeado */
+  color: #ffffff;
 }
 
 [data-testid="stSidebar"] {
-  background: linear-gradient(180deg, #0d1f2d 0%, #0a1628 100%);
-  border-right: 1px solid rgba(201, 165, 92, 0.15);
+  background-color: #000b0d;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 [data-testid="stHeader"] {
   background: transparent;
 }
 
-/* === SIDEBAR STYLING === */
-[data-testid="stSidebar"] [data-testid="stMarkdown"] h1 {
-  color: #c9a55c !important;
-  font-size: 1.4rem !important;
-  letter-spacing: 0.05em;
+/* === TIPOGRAFIA === */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap");
+
+html,
+body,
+[class*="css"] {
+  font-family: "Inter", sans-serif;
 }
 
-[data-testid="stSidebar"] label {
-  color: rgba(201, 165, 92, 0.7) !important;
-  font-size: 0.7rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-}
-
-[data-testid="stSidebar"] .stSelectbox > div > div {
-  background: rgba(201, 165, 92, 0.08) !important;
-  border: 1px solid rgba(201, 165, 92, 0.2) !important;
-  color: #c9a55c !important;
-  border-radius: 8px;
-}
-
-[data-testid="stSidebar"] .stSlider > div > div > div {
-  color: #c9a55c !important;
-}
-
-/* Slider track and thumb */
-[data-testid="stSidebar"] .stSlider [data-testid="stThumbValue"] {
-  color: #c9a55c !important;
-}
-
-/* === METRIC CARDS === */
-[data-testid="stMetric"] {
-  background: rgba(201, 165, 92, 0.05);
-  border: 1px solid rgba(201, 165, 92, 0.15);
-  border-radius: 16px;
-  padding: 1.2rem;
-  backdrop-filter: blur(10px);
-}
-
-[data-testid="stMetric"] label {
-  color: rgba(201, 165, 92, 0.6) !important;
-  font-size: 0.65rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 700;
-}
-
-[data-testid="stMetric"] [data-testid="stMetricValue"] {
-  color: #ffffff !important;
-  font-size: 1.6rem !important;
-  font-weight: 800;
-}
-
-[data-testid="stMetric"] [data-testid="stMetricDelta"] {
-  color: #c9a55c !important;
-}
-
-/* === GLASSMORPHISM CONTAINERS === */
-.glassmorphism {
-  background: rgba(201, 165, 92, 0.03);
-  border: 1px solid rgba(201, 165, 92, 0.12);
-  border-radius: 16px;
-  padding: 1.5rem;
-  backdrop-filter: blur(10px);
-}
-
-/* === HEADINGS === */
 h1,
 h2,
 h3 {
+  font-family: "Playfair Display", serif !important;
   color: #ffffff !important;
+  font-weight: 400 !important;
 }
 
-h4,
-h5,
-h6 {
-  color: rgba(201, 165, 92, 0.8) !important;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.7rem !important;
-  font-weight: 700;
+/* === CUSTOM METRIC CARDS === */
+.custom-card {
+  background: rgba(1, 26, 29, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* === GENERAL TEXT === */
-p,
-span,
-div {
-  color: #e0e0e0;
+.card-icon {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.5rem;
 }
 
-/* === DIVIDER === */
-hr {
-  border-color: rgba(201, 165, 92, 0.15) !important;
-}
-
-/* === TABS === */
-.stTabs [data-baseweb="tab-list"] {
-  gap: 8px;
-  background: transparent;
-}
-
-.stTabs [data-baseweb="tab"] {
-  background: rgba(201, 165, 92, 0.08);
-  border: 1px solid rgba(201, 165, 92, 0.2);
-  border-radius: 8px;
-  color: rgba(201, 165, 92, 0.7);
+.card-title {
+  color: rgba(255, 255, 255, 0.5);
   font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.card-value {
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.card-badge {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(4, 59, 64, 0.4);
+  color: #00d4d4; /* Teal neon */
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.6rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  border: 1px solid rgba(0, 212, 212, 0.2);
 }
 
-.stTabs [aria-selected="true"] {
-  background: rgba(201, 165, 92, 0.2) !important;
-  color: #c9a55c !important;
-  border-color: #c9a55c !important;
+/* === CHART CONTAINER === */
+.chart-container {
+  background: rgba(1, 26, 29, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
 }
 
-/* === SCROLLBAR === */
-::-webkit-scrollbar {
-  width: 6px;
+.section-title {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin-bottom: 0.2rem;
 }
-::-webkit-scrollbar-track {
-  background: #0a1628;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(201, 165, 92, 0.3);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(201, 165, 92, 0.5);
+
+.section-subtitle {
+  color: rgba(4, 189, 172, 0.7); /* Teal suave */
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin-bottom: 2rem;
 }
 
 /* === PLOTLY OVERRIDES === */
 .js-plotly-plot .plotly .modebar {
-  background: transparent !important;
+  display: none !important;
 }
 
-/* === EXPANDER === */
-[data-testid="stExpander"] {
-  background: rgba(201, 165, 92, 0.03);
-  border: 1px solid rgba(201, 165, 92, 0.12);
-  border-radius: 12px;
+/* === SIDEBAR ELEMENTS === */
+[data-testid="stSidebar"] .stSelectbox > div > div {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #aaa !important;
+}
+
+/* === STREAMLIT METRIC (Legacy override if needed) === */
+[data-testid="stMetric"] {
+  display: none; /* Ocultar métricas padrão se misturadas */
 }
